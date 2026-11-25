@@ -1,0 +1,29 @@
+name: Verify integrity
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Schema and wording
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: |
+          set -euo pipefail
+          node --check js/app.js
+          node --check js/site-meta.js
+          node --check js/learn-path.js
+          node --check js/data/topics.js
+          node --check js/data/trials.js
+          node --check js/data/questions.js
+          node --check scripts/verify-integrity.js
+
+      - name: Verify integrity
+        run: node scripts/verify-integrity.js
